@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة الفعل المضارع (المذكر والمؤنث) - الصف الثالث</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .game-container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 700px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .header-info {
+            background: #f0f7ff;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-right: 5px solid #0077b6;
+            text-align: right;
+        }
+        .header-info h3 {
+            color: #0077b6;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+        .header-info p {
+            color: #495057;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        
+        /* Welcome Screen */
+        #welcome-screen h2 {
+            color: #0077b6;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        #welcome-screen p {
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        .name-input {
+            width: 80%;
+            padding: 14px;
+            font-size: 1.1rem;
+            border: 2px solid #ced4da;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .name-input:focus {
+            border-color: #0077b6;
+        }
+        .error-msg {
+            color: #d90429;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            font-weight: 750;
+            min-height: 24px;
+        }
+        .start-btn {
+            background-color: #38b000;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 35px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .start-btn:hover {
+            background-color: #2b8a00;
+        }
+
+        /* Quiz Screen */
+        .progress-bar {
+            width: 100%;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            height: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #38b000;
+            width: 10%;
+            transition: width 0.4s ease;
+            border-radius: 10px;
+        }
+        .question-counter {
+            font-size: 1rem;
+            color: #6c757d;
+            margin-bottom: 10px;
+            font-weight: 600;
+            text-align: right;
+        }
+        .question-text {
+            font-size: 1.3rem;
+            color: #212529;
+            margin-bottom: 25px;
+            font-weight: 700;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .options-container {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        .option-btn {
+            background-color: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            padding: 14px 20px;
+            font-size: 1.1rem;
+            color: #343a40;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            text-align: right;
+        }
+        .option-btn:hover:not(:disabled) {
+            background-color: #e2eafc;
+            border-color: #4cc9f0;
+            transform: translateY(-2px);
+        }
+        .option-btn.correct {
+            background-color: #d8f3dc !important;
+            border-color: #52b788 !important;
+            color: #1b4332 !important;
+        }
+        .option-btn.incorrect {
+            background-color: #ffe5d9 !important;
+            border-color: #f72585 !important;
+            color: #7209b7 !important;
+        }
+        .feedback {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            min-height: 30px;
+        }
+        .feedback.success { color: #38b000; }
+        .feedback.error { color: #d90429; }
+        
+        .next-btn {
+            background-color: #0077b6;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 35px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: none;
+        }
+        .next-btn:hover {
+            background-color: #023e8a;
+        }
+
+        /* Certificate Screen */
+        #certificate-screen {
+            display: none;
+        }
+        .certificate {
+            background: #fffdf5;
+            border: 8px double #0077b6;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .certificate h2 {
+            color: #d4af37;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            font-weight: 900;
+        }
+        .certificate h4 {
+            color: #0077b6;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+        .certificate p {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        .student-highlight {
+            font-size: 1.5rem;
+            color: #38b000;
+            font-weight: 800;
+            margin: 15px 0;
+            border-bottom: 2px dashed #38b000;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+        .cert-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            font-weight: 700;
+            color: #495057;
+            font-size: 1rem;
+        }
+        .cert-buttons {
+            margin-top: 25px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .action-btn {
+            background-color: #4361ee;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .action-btn.print {
+            background-color: #2b9348;
+        }
+        .action-btn:hover {
+            opacity: 0.9;
+        }
+
+        .footer-credit {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #adb5bd;
+            border-top: 1px solid #e9ecef;
+            padding-top: 10px;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .game-container {
+                box-shadow: none;
+                width: 100%;
+                max-width: 100%;
+                padding: 0;
+            }
+            .header-info, .cert-buttons, .footer-credit, #welcome-screen, #quiz-screen {
+                display: none !important;
+            }
+            #certificate-screen {
+                display: block !important;
+            }
+            .certificate {
+                border: 5px solid #000;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <div class="header-info">
+        <h3>مدرسة ذكور الشهيدين بلال وأشرف الأساسية</h3>
+        <p>إعداد المعلم: محمد جرار | درس الفعل المضارع (المذكر والمؤنث)</p>
+    </div>
+
+    <div id="welcome-screen">
+        <h2>أهلاً بك يا بطل المستقبل! 🌟</h2>
+        <p>الرجاء إدخال اسمك الثلاثي للبدء باللعبة واكتساب شهادة التقدير:</p>
+        <input type="text" id="student-name-input" class="name-input" placeholder="اكتب اسمك هنا..." autocomplete="off">
+        <div id="name-error" class="error-msg"></div>
+        <button class="start-btn" onclick="startGame()">ابدأ التحدي 🚀</button>
+    </div>
+
+    <div id="quiz-screen" style="display: none;">
+        <div class="question-counter" id="counter">السؤال 1 من 10</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        
+        <div class="question-text" id="question-text">جاري تحميل السؤال...</div>
+        
+        <div class="options-container" id="options-container">
+            <!-- Options injected by JS -->
+        </div>
+
+        <div class="feedback" id="feedback"></div>
+        
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">السؤال التالي ⬅</button>
+    </div>
+
+    <div id="certificate-screen">
+        <div class="certificate">
+            <h2>شهادة تقدير وتفوق</h2>
+            <h4>منهاج دولة فلسطين - الصف الثالث الأساسي</h4>
+            <p>تتقدم إدارة المدرسة ومعلم المادة بالتهنئة الحارة للبطل المميز:</p>
+            <div class="student-highlight" id="display-student-name">اسم الطالب</div>
+            <p>وذلك لاجتيازه لعبة "الفعل المضارع (المذكر والمؤنث)" بتميز وإتقان، وحصوله على العلامة الكاملة.</p>
+            
+            <div class="cert-footer">
+                <div>مدير المدرسة / المدرسة:<br>مدرسة ذكور الشهيدين بلال وأشرف الأساسية</div>
+                <div>معلم المادة:<br>محمد جرار</div>
+            </div>
+        </div>
+
+        <div class="cert-buttons">
+            <button class="action-btn print" onclick="window.print()">🖨 طباعة الشهادة</button>
+            <button class="action-btn" onclick="restartGame()">🔄 إعادة اللعب</button>
+        </div>
+    </div>
+
+    <div class="footer-credit">
+        حقوق النشر محفوظة © 2026 | المنهاج الفلسطيني
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            question: "أكمل الفراغ بالفعل المضارع المناسب للمذكر: 'أحمد ... دروسه بجد.'",
+            options: ["تكتب", "يكتب", "نكتب", "أكتب"],
+            correct: 1
+        },
+        {
+            question: "اختر الفعل المضارع المناسب للمؤنث: 'فاطمة ... اللعبة بمهارة.'",
+            options: ["يلعب", "تلعب", "نلعب", "ألعب"],
+            correct: 1
+        },
+        {
+            question: "حدد الفعل المضارع المذكر المناسب للجملة: 'الولد ... الكرة في الحديقة.'",
+            options: ["تلعب", "ألعاب", "يلعب", "تلعبين"],
+            correct: 2
+        },
+        {
+            question: "اختر الفعل المضارع المؤنث المناسب: 'الطبيبة ... المريض بعناية.'",
+            options: ["تعالج", "يعالج", "نعالج", "تعالجين"],
+            correct: 0
+        },
+        {
+            question: "ما هو الفعل المضارع المناسب للمذكر: 'المعلم ... الدرس بوضوح.'",
+            options: ["تشرح", "يشرح", "نشرح", "أشرح"],
+            correct: 1
+        },
+        {
+            question: "اختر الفعل المضارع المؤنث المناسب: 'البنت ... الزهور في الحديقة.'",
+            options: ["يسقي", "تسقي", "نسقي", "تسقين"],
+            correct: 1
+        },
+        {
+            question: "أي من الأفعال التالية يعتبر فعلاً مضارعاً مذكراً؟",
+            options: ["تأكل", "أكلت", "يأكل", "اكُلْ"],
+            correct: 2
+        },
+        {
+            question: "أي من الأفعال الآتية يعتبر فعلاً مضارعاً مؤنثاً؟",
+            options: ["يرسم", "رسمت", "ترسم", "ارسمْ"],
+            correct: 2
+        },
+        {
+            question: "أكمل الفراغ للمذكر: 'أخي الصغير ... الحليب كل صباح.'",
+            options: ["تشرب", "يشرب", "نشرب", "اشربْ"],
+            correct: 1
+        },
+        {
+            question: "أكمل الفراغ للمؤنث: 'أختي الكبرى ... الغرفة بانتظام.'",
+            options: ["يرتب", "نرتب", "ترتب", "ترتيب"],
+            correct: 2
+        }
+    ];
+
+    let studentName = "";
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let answeredCorrectly = false;
+
+    const welcomeScreen = document.getElementById("welcome-screen");
+    const quizScreen = document.getElementById("quiz-screen");
+    const certificateScreen = document.getElementById("certificate-screen");
+    const studentNameInput = document.getElementById("student-name-input");
+    const nameError = document.getElementById("name-error");
+    
+    const questionText = document.getElementById("question-text");
+    const optionsContainer = document.getElementById("options-container");
+    const feedbackEl = document.getElementById("feedback");
+    const nextBtn = document.getElementById("next-btn");
+    const counterEl = document.getElementById("counter");
+    const progressFill = document.getElementById("progress-fill");
+    const displayStudentName = document.getElementById("display-student-name");
+
+    function startGame() {
+        const nameVal = studentNameInput.value.trim();
+        if (nameVal === "") {
+            nameError.textContent = "الرجاء إدخال اسمك قبل البدء باللعبة!";
+            return;
+        }
+        nameError.textContent = "";
+        studentName = nameVal;
+        welcomeScreen.style.display = "none";
+        quizScreen.style.display = "block";
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        answeredCorrectly = false;
+        feedbackEl.textContent = "";
+        feedbackEl.className = "feedback";
+        nextBtn.style.display = "none";
+        
+        const q = questions[currentQuestionIndex];
+        counterEl.textContent = `السؤال ${currentQuestionIndex + 1} من ${questions.length}`;
+        progressFill.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
+        questionText.textContent = q.question;
+        
+        optionsContainer.innerHTML = "";
+        q.options.forEach((option, index) => {
+            const btn = document.createElement("button");
+            btn.className = "option-btn";
+            btn.textContent = option;
+            btn.onclick = () => selectOption(index, btn);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    function selectOption(selectedIndex, selectedBtn) {
+        if (answeredCorrectly) return;
+
+        const q = questions[currentQuestionIndex];
+        const allButtons = optionsContainer.getElementsByClassName("option-btn");
+
+        if (selectedIndex === q.correct) {
+            selectedBtn.classList.add("correct");
+            feedbackEl.textContent = "أحسنت! إجابة صحيحة 🌟";
+            feedbackEl.className = "feedback success";
+            answeredCorrectly = true;
+            score++;
+
+            for (let btn of allButtons) {
+                btn.disabled = true;
+            }
+
+            if (currentQuestionIndex < questions.length - 1) {
+                nextBtn.style.display = "inline-block";
+            } else {
+                setTimeout(showCertificate, 1200);
+            }
+        } else {
+            selectedBtn.classList.add("incorrect");
+            selectedBtn.disabled = true;
+            feedbackEl.textContent = "إجابة خاطئة، حاول مرة أخرى! ❌";
+            feedbackEl.className = "feedback error";
+        }
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        loadQuestion();
+    }
+
+    function showCertificate() {
+        quizScreen.style.display = "none";
+        certificateScreen.style.display = "block";
+        displayStudentName.textContent = studentName;
+    }
+
+    function restartGame() {
+        currentQuestionIndex = 0;
+        score = 0;
+        studentNameInput.value = "";
+        nameError.textContent = "";
+        certificateScreen.style.display = "none";
+        welcomeScreen.style.display = "block";
+    }
+</script>
+
+</body>
+</html>
